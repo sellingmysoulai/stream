@@ -188,7 +188,10 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
         build = erin.name.split('#')[2]
     except:
         build = erin.split('#')[2]
-    df = pd.read_csv(erin)
+    try:
+        df = pd.read_csv(erin)
+    except:
+        df = dataframes[erin]
     df['received_at'] = pd.to_datetime(df['received_at'])
     df['date'] = df['received_at'].dt.date
 
@@ -274,7 +277,9 @@ def price_to_float(price_str):
 
 def load_data(file_list):
     if file_list == "random":
-        file_list = glob.glob('datas/*')
+        #file_list = glob.glob('datas/*')
+        file_list = generate_dataframes_based_on_template(template_path='mossom.csv')
+        st.write(f"Number of Simulated Rooms to generate: {len(file_list)}")
     room_type_frequency = {}
     locations = {}
     additionalHours = {
@@ -309,6 +314,7 @@ def load_data(file_list):
     parts_changes = {}
     
     for file_path in file_list:
+        print(file_path)
         try:
             path_parts = file_path.name.split('#')
         except:
