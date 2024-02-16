@@ -607,7 +607,7 @@ def load_data(file_list):
     st.write("Total Price Difference:", total_price_difference_str)
     
 
-days = 79
+days = 55
 hours = 8
 total_hours = days*hours
 capacity_needed = total_hours*0.75
