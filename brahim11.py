@@ -12,6 +12,9 @@ from genebait import generate_dataframes_based_on_template
 
 additionalHoursLocal = {}
 
+removeifbelow = 20
+addifabove = 80
+
 parts = {
     "BowOne": {
         'Glazen bovenpaneel': 3,
@@ -146,7 +149,7 @@ parts = {
         }
 }
 
-prices = {
+dealerprices = {
     'Glazen bovenpaneel': '€285',
     'Glazen onderpaneel': '€245',
     'Hoekstaander': '€110',
@@ -182,17 +185,48 @@ def get_max_occupancy(start_time, end_time, df):
     filtered_df = df.loc[mask, 'people_counter_all']
     return 0 if filtered_df.empty else filtered_df.max()
 
-def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView, locToRem, dataframes):
+def getdays(erin, dataframes, include_weekends=False):
+    print("Transforming ",erin)
+    try:
+        df = pd.read_csv(erin)
+    except Exception as error:
+        print("svennnnx,",error)
+        df = dataframes[erin]
+    df['received_at'] = pd.to_datetime(df['received_at'])
+    df['date'] = df['received_at'].dt.date
+
+        # Determine the day of the week for each date (Monday=0, Sunday=6)
+    if include_weekends:
+        days = df['date'].nunique()
+        #st.write("YESWEEKENDS DAYS",days)
+
+    else:
+        df['weekday'] = df['received_at'].dt.weekday
+
+        # Filter for weekdays (Monday through Friday) and count unique dates
+        days = df[df['weekday'].between(0, 4)]['date'].nunique()
+
+    return days
+
+def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView, locToRem, dataframes, bear, include_weekends):
     print("Transforming ",erin)
     try:
         build = erin.name.split('#')[2]
     except:
         build = erin.split('#')[2]
-    try:
-        df = pd.read_csv(erin)
-    except:
+    if bear is "random":
         df = dataframes[erin]
+    else:
+        erin.seek(0)
+        df = pd.read_csv(erin)
+        
     df['received_at'] = pd.to_datetime(df['received_at'])
+
+    if not include_weekends:
+        #st.write("Excluding Weekend Data...")
+        # Filter out weekends: keep only rows where day of the week is less than 5 (Monday=0, Tuesday=1, ..., Friday=4)
+        df = df[df['received_at'].dt.dayofweek < 5]
+
     df['date'] = df['received_at'].dt.date
 
     intervals_df = pd.DataFrame()
@@ -219,15 +253,32 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     st.write(f"Usage {room_type}: {percentage_non_zero:.2f}%")
     #print(f"Percentage of intervals where Occupancy is not 0: {percentage_non_zero:.2f}%")
 
-    if percentage_non_zero > 80 or percentage_non_zero < 20:
+    previous_occupancy = None  # Initialize a variable to hold the occupancy of the previous interval
+    
+    if percentage_non_zero > addifabove or percentage_non_zero < removeifbelow:
         #print("sven")
         for occupancy in intervals_df['Occupancy']:
             if occupancy == 1:
-                additionalHours['BowOne'] += 1
-                if 'BowOne' in additionalHoursLocal[build]:
-                    additionalHoursLocal[build]['BowOne'] += 1
-                else:
-                    additionalHoursLocal[build]['BowOne'] = 1
+                if previous_occupancy is not None:  # Check if there is a previous occupancy to print
+                    print(f"Previous occupancy: {previous_occupancy}")
+                    if previous_occupancy == 0:
+                        additionalHours['BowOne'] += 1
+                        if 'BowOne' in additionalHoursLocal[build]:
+                            additionalHoursLocal[build]['BowOne'] += 1
+                        else:
+                            additionalHoursLocal[build]['BowOne'] = 1
+                    elif previous_occupancy == 1:
+                        additionalHours['BowTwo'] += 1
+                        if 'BowOne' in additionalHoursLocal[build]:
+                            additionalHoursLocal[build]['BowTwo'] += 1
+                        else:
+                            additionalHoursLocal[build]['BowTwo'] = 1
+                    else:
+                        additionalHours['BowOne'] += 1
+                        if 'BowOne' in additionalHoursLocal[build]:
+                            additionalHoursLocal[build]['BowOne'] += 1
+                        else:
+                            additionalHoursLocal[build]['BowOne'] = 1
             elif occupancy == 2:
                 additionalHours['BowTwo'] += 1
                 if 'BowTwo' in additionalHoursLocal[build]:
@@ -259,6 +310,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
                 else:
                     additionalHoursLocal[build]['BowTwelve'] = 1
 
+        previous_occupancy = occupancy  # Update the previous occupancy for the next iteration
         # Update subtractHours based on room type
         room_key = room_type
         uniqLoc = build+"$"+room_type
@@ -275,11 +327,14 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
 def price_to_float(price_str):
     return float(price_str.replace('€', '').replace(',', '.'))
 
-def load_data(file_list):
+def load_data(file_list, include_weekends=False):
     if file_list == "random":
         #file_list = glob.glob('datas/*')
         file_list = generate_dataframes_based_on_template(template_path='mossom.csv')
         st.write(f"Number of Simulated Rooms to generate: {len(file_list)}")
+        bear = "random"
+    else:
+        bear = "files"
     room_type_frequency = {}
     locations = {}
     additionalHours = {
@@ -384,10 +439,17 @@ def load_data(file_list):
 
         #print(building)
         #print(room_type)
-        transformMOS(file_path, 'mossom.csv', additionalHours, subtractHours, room_type, locView, locToRem, file_list)
+        days = getdays( file_path, file_list, include_weekends)
+        transformMOS(file_path, 'mossom.csv', additionalHours, subtractHours, room_type, locView, locToRem, file_list, bear, include_weekends)
 
     print("Locations",locations)
     print("locView",locView)
+
+    hours = 8
+    st.write(days,"Days")
+    total_hours = days*hours
+    capacity_needed = total_hours*0.75
+    print("Total Hours & Capacity Needed", total_hours, capacity_needed)
 
 
     for key in additionalHours:
@@ -568,8 +630,8 @@ def load_data(file_list):
 
     total_price_difference = 0
     for part, change in parts_changes.items():
-        if part in prices:
-            part_price = price_to_float(prices[part])
+        if part in dealerprices:
+            part_price = price_to_float(dealerprices[part])
             total_price_difference += part_price * change
 
     # Format the total price difference as a string with two decimal places
@@ -581,6 +643,19 @@ def load_data(file_list):
     adjusted_freq_df = pd.DataFrame(list(adjusted_frequencies.items()), columns=['Part', 'Quantity'])
     initial_parts_df = pd.DataFrame(list(total_present_parts_initial.items()), columns=['Part', 'Quantity'])
     adjusted_parts_df = pd.DataFrame(list(total_present_parts_adjusted.items()), columns=['Part', 'Quantity'])
+
+    # Create a new dictionary for delta
+    delta = {}
+
+    # Iterate over the keys in the additions dictionary
+    for key in additionalHours:
+        # Calculate the change by subtracting the value in reductions from the value in additions
+        # If the key is not found in reductions, it defaults to 0
+        change = additionalHours[key] - subtractHours.get(key, 0)
+        # Store the calculated change in the delta dictionary
+        delta[key] = change
+
+    
 
     # Display the DataFrame as a table in Streamlit
     st.subheader("Current Configuration")
@@ -595,6 +670,8 @@ def load_data(file_list):
     st.write(additionalHours)
     st.subheader("Reductions")
     st.write(subtractHours)
+    st.subheader("Delta Table")
+    st.write(delta)
     st.subheader("Rooms to add")
     st.write(roundDowns)
     st.subheader("Rooms to remove")
@@ -606,12 +683,13 @@ def load_data(file_list):
     st.write("Changes",parts_changes)
     st.write("Total Price Difference:", total_price_difference_str)
     
+    
 
-days = 55
-hours = 8
-total_hours = days*hours
-capacity_needed = total_hours*0.75
-print("Total Hours & Capacity Needed", total_hours, capacity_needed)
+#days = 55
+#hours = 8
+#total_hours = days*hours
+#capacity_needed = total_hours*0.75
+#print("Total Hours & Capacity Needed", total_hours, capacity_needed)
 
 #load_data('datas/*')
 
@@ -635,17 +713,20 @@ def main():
     # File uploader widget
     uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True, type=['csv'])
 
+    # Include Weekends checkbox
+    include_weekends = st.checkbox("Include Weekends")
+
     # Show 'Go with Files' button only if files are uploaded
     if uploaded_files:
         go_with_files = st.button("Go with Files")
 
         if go_with_files:
-            load_data(uploaded_files)
+            load_data(uploaded_files, include_weekends)
 
     # 'Go Random' button is always visible
     go_random = st.button("Go Random")
     if go_random:
-        load_data("random")
+        load_data("random", include_weekends)
 
 if __name__ == '__main__':
     main()
