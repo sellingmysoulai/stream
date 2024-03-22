@@ -712,9 +712,6 @@ def load_data(file_list, month, include_weekends=False):
     delta_df = pd.DataFrame(delta_list, columns=['Part', 'Value'])
     print("DELTAAAAA",delta)
 
-    for delt in delta_list:
-        st.write("delt",delt)
-
     ordered_add = {k: additionalHours[k] for k in ordered_keys}
 
     # Create blank DataFrame for separation
