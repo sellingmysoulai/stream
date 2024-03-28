@@ -256,7 +256,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     df['weekday'] = df['received_at'].dt.dayofweek  # Extract the weekday
 
     # Update weekday_occupancy_counts with the number of occupancies for each weekday
-    for weekday, count in df.groupby('weekday').size().iteritems():
+    for weekday, count in df.groupby('weekday').size().items():
         weekday_occupancy_counts[weekday] += count
 
     intervals_df = pd.DataFrame()
