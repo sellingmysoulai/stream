@@ -224,6 +224,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     print("Transforming ",erin)
     global total_intervals
     global interval_occupancy_data
+    global weekday_occupancy_counts
     try:
         build = erin.name.split('#')[2]
     except:
