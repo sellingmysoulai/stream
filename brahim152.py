@@ -793,7 +793,7 @@ def load_data_overview(file_list, month, include_weekends=False):
 
     # Convert weekday numbers to names for readability
     weekday_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    weekday_percentages_named = {weekday_names[weekday]: percentage for weekday, percentage in weekday_percentages.items()}
+    weekday_percentages_named = {weekday_names[weekday]: f"{percentage:.2f}%" for weekday, percentage in weekday_percentages.items()}
 
     total_non_zero_occupancies = sum(cumulative_occupancy_frequency.values())
     
@@ -825,17 +825,17 @@ def load_data_overview(file_list, month, include_weekends=False):
 
     # Display the DataFrame as a table in Streamlit
     
-    col1, col2 = st.columns(2)
+    #col1, col2 = st.columns(2)
 
     # Display the first table with a title in the first column
-    with col1:
-        st.subheader("Current\nConfiguration")
-        st.table(room_freq_df)
+    #with col1:
+        #st.subheader("Current\nConfiguration")
+        #st.table(room_freq_df)
 
     # Display the second table with a title in the second column
-    with col2:
-        st.subheader("Recommended\nConfiguration")
-        st.table(adjusted_freq_df)
+    #with col2:
+        #st.subheader("Recommended\nConfiguration")
+        #st.table(adjusted_freq_df)
     #st.subheader("Locations before")
     #st.write(locations)
     #st.subheader("Locations after")
@@ -844,10 +844,10 @@ def load_data_overview(file_list, month, include_weekends=False):
     #st.write(ordered_add)
     #st.subheader("Reductions")
     #st.write(subtractHours)
-    left_co, cent_co,last_co = st.columns(3)
-    with cent_co:
-        st.subheader("Delta Table")
-        st.write(delta_df)
+    #left_co, cent_co,last_co = st.columns(3)
+    #with cent_co:
+        #st.subheader("Delta Table")
+        #st.write(delta_df)
     #st.subheader("Rooms to add")
     #st.write(roundDowns)
     #st.subheader("Rooms to remove")
