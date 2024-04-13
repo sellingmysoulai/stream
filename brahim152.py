@@ -303,10 +303,10 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
                 cumulative_occupancy_frequency[occupancy_level] = count
 
     #print("Occupancy Frequencies:", occupancy_frequency)
-    st.write(occupancy_frequency)
+    #st.write(occupancy_frequency)
     if occupancy_frequency:
         highest_occupancy = max(occupancy_frequency.keys())
-        st.write(f"Highest Recorded Occupancy: {highest_occupancy}")
+        #st.write(f"Highest Recorded Occupancy: {highest_occupancy}")
     else:
         print("No occupancy records found.")
 
@@ -318,7 +318,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
 
     # Now occupancy_percentage will look something like {1: 20%, 2: 15%, ...}
     # You can print it out or use it as needed
-    st.write("Occupancy Percentages:", occupancy_percentage)
+    #st.write("Occupancy Percentages:", occupancy_percentage)
 
     # Filter out zero occupancy since we're interested in when the room is occupied
     occupied_occupancy_frequency = {k: v for k, v in occupancy_frequency.items() if k != 0}
@@ -332,13 +332,13 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     # Calculate the average number of occupants when occupied
     if total_occupied > 0:  # To avoid division by zero
         average_occupied = weighted_sum_occupants / total_occupied
-        st.write(f"Average Number of Occupants When Occupied: {average_occupied:.2f}")
+        #st.write(f"Average Number of Occupants When Occupied: {average_occupied:.2f}")
     else:
         print("No occupied records found.")
 
     num_rows_non_zero = (intervals_df['Occupancy'] > 0).sum()
     percentage_non_zero = (num_rows_non_zero / len(intervals_df)) * 100
-    st.write(f"Usage {room_type}: {percentage_non_zero:.2f}%")
+    #st.write(f"Usage {room_type}: {percentage_non_zero:.2f}%")
     #print(f"Percentage of intervals where Occupancy is not 0: {percentage_non_zero:.2f}%")
 
     previous_occupancy = None  # Initialize a variable to hold the occupancy of the previous interval
