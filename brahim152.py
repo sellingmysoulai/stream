@@ -418,19 +418,19 @@ def price_to_float(price_str):
 def analyze_mos_file(mos_file):
     # Load data
     df = pd.read_csv(mos_file)
-    df['received_at'] = pd.to_datetime(df['received_at'])
-    df['date'] = df['received_at'].dt.date
+    df['DateTime'] = pd.to_datetime(df['DateTime'])
+    df['date'] = df['DateTime'].dt.date
 
     # Compute total and non-zero occupancy intervals
     total_intervals = len(df)
-    non_zero_intervals = df[df['people_counter_all'] > 0]
+    non_zero_intervals = df[df['Occupancy'] > 0]
     num_non_zero_occupancies = len(non_zero_intervals)
     occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
 
     # Average occupancy when in use
-    average_occupancy = non_zero_intervals['people_counter_all'].mean()
+    average_occupancy = non_zero_intervals['Occupancy'].mean()
 
-    max_occupancy = non_zero_intervals['people_counter_all'].max()
+    max_occupancy = non_zero_intervals['Occupancy'].max()
 
     try:
             path_parts = mos_file.name.split('#')
@@ -446,7 +446,7 @@ def analyze_mos_file(mos_file):
     total_non_zero_intervals = len(non_zero_intervals)
     cumulative_percentage = 0
     for i in range(1, 9):  # From 1 to 8 persons
-        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['people_counter_all'] == i].shape[0] / total_non_zero_intervals * 100
+        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['Occupancy'] == i].shape[0] / total_non_zero_intervals * 100
         cumulative_percentage += exclusive_occupancies[i]
         cumulative_percentages[i] = cumulative_percentage
 
