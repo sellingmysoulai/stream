@@ -866,7 +866,7 @@ def load_data_overview(file_list, month, include_weekends=False):
         zin = "healthy"
     else:
         zin = "too high"
-    st.write(f"Average usage: {persventage_occupied:.2f}%. This average is deemed as {zin}")
+    st.write(f"Your spaces have been occupied {persventage_occupied:.2f}% of the time. This average is deemed as {zin}.")
     st.write("Percentage of Occupancies by Weekday:")
     st.write(weekday_percentages_named)
     st.write("Occupancy Distribution:")
