@@ -769,7 +769,7 @@ def load_data_overview(file_list, month, include_weekends=False):
     final_df = pd.concat([initial_parts_df, blank_df, adjusted_parts_df, blank_df.copy(), df3], axis=1)
 
     total_occupancies = sum(cumulative_occupancy_frequency.values())
-    occupancy_percentages = {occupant: (count / total_occupancies) * 100 for occupant, count in cumulative_occupancy_frequency.items()}
+    occupancy_percentages = {occupant: f"{(count / total_occupancies) * 100:.2f}%" for occupant, count in cumulative_occupancy_frequency.items()}
 
     # Calculate the weighted sum of occupants
     weighted_sum_occupants = sum(occupancy_level * count for occupancy_level, count in cumulative_occupancy_frequency.items())
