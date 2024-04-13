@@ -183,6 +183,7 @@ cumulative_occupancy_frequency = {}
 weekday_occupancy_counts = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}  # Monday=0, Tuesday=1, ..., Sunday=6
 total_intervals = 0
 interval_occupancy_data = {}
+data_rows = []
 
 def get_max_occupancy(start_time, end_time, df):
     mask = (df['received_at'] >= start_time) & (df['received_at'] < end_time)
@@ -225,6 +226,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     global total_intervals
     global interval_occupancy_data
     global weekday_occupancy_counts
+    global data_rows
     try:
         build = erin.name.split('#')[2]
     except:
@@ -403,6 +405,38 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
             locView[uniqLoc] += 1
         else:
             locView.update({uniqLoc: 1})
+
+    total_intervals = len(df)
+    non_zero_intervals = df[df['Occupancy'] > 0]
+    num_non_zero_occupancies = len(non_zero_intervals)
+    occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
+
+    # Average occupancy when in use
+    average_occupancy = non_zero_intervals['Occupancy'].mean()
+    max_occupancy = non_zero_intervals['Occupancy'].max()
+
+    name = "Sven"
+
+    # Exclusive occupancies for 1-8 Persons calculated from non-zero intervals
+    exclusive_occupancies = {}
+    cumulative_percentages = {}
+    total_non_zero_intervals = len(non_zero_intervals)
+    cumulative_percentage = 0
+    for i in range(1, 9):  # From 1 to 8 persons
+        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['Occupancy'] == i].shape[0] / total_non_zero_intervals * 100
+        cumulative_percentage += exclusive_occupancies[i]
+        cumulative_percentages[i] = cumulative_percentage
+
+    # Build the row for this file
+    row = {
+        'Configurations': name,
+        'Occupancy Percentage': occupancy_percentage,
+        'Average Occupancy When In Use': average_occupancy,
+        'Max Occupancy': max_occupancy
+    }
+    row.update({f'Cumulative Occupancy {i} Persons': cumulative_percentages[i] for i in range(1, 9)})
+
+    data_rows.append(row)
 
 
 def price_to_float(price_str):
@@ -832,7 +866,7 @@ def load_data_overview(file_list, month, include_weekends=False):
         "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
     })
 
-    data_rows = [analyze_mos_file(file) for file in file_list]
+    #data_rows = [analyze_mos_file(file) for file in file_list]
     mos_summary_df = pd.DataFrame(data_rows)
     st.table(mos_summary_df)
 
