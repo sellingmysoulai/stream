@@ -288,8 +288,8 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
             interval_occupancy_data[interval] = [occupancy]
     
     intervals_df['Occupancy'].fillna(0, inplace=True)
-    newfil = intervals_df.to_csv(eruit, index=False)
-    newrow = analyze_mos_file(newfil)
+    intervals_df.to_csv(eruit, index=False)
+    newrow = analyze_mos_file(eruit)
     data_rows.append(newrow)
 
     occupancy_frequency = intervals_df['Occupancy'].value_counts().to_dict()
