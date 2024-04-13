@@ -229,8 +229,10 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     global data_rows
     try:
         build = erin.name.split('#')[2]
+        conf = erin.name.split('#')[3]
     except:
         build = erin.split('#')[2]
+        conf = erin.split('#')[3]
     if bear is "random":
         df = dataframes[erin]
     else:
@@ -415,7 +417,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     average_occupancy = non_zero_intervals['people_counter_all'].mean()
     max_occupancy = non_zero_intervals['people_counter_all'].max()
 
-    name = "Sven"
+    name = build + " " + conf.replace(".csv","")
 
     # Exclusive occupancies for 1-8 Persons calculated from non-zero intervals
     exclusive_occupancies = {}
@@ -866,10 +868,6 @@ def load_data_overview(file_list, month, include_weekends=False):
         "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
     })
 
-    #data_rows = [analyze_mos_file(file) for file in file_list]
-    mos_summary_df = pd.DataFrame(data_rows)
-    st.table(mos_summary_df)
-
 
     # Calculate the weighted sum of occupants
     weighted_sum_occupants = sum(occupancy_level * count for occupancy_level, count in cumulative_occupancy_frequency.items())
@@ -970,9 +968,12 @@ def load_data_overview(file_list, month, include_weekends=False):
     st.table(cumdf)
     st.write("Percentage of Occupancies by Weekday:")
     st.write(weekday_percentages_named)
-    st.write("Occupancy Distribution:")
-    st.write(occupancy_percentages)
+    #st.write("Occupancy Distribution:")
+    #st.write(occupancy_percentages)
     st.write("Average occupancy when in use",average_occupants_when_occupied)
+    #data_rows = [analyze_mos_file(file) for file in file_list]
+    mos_summary_df = pd.DataFrame(data_rows)
+    st.table(mos_summary_df)
     
     
     
