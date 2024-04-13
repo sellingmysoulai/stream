@@ -290,7 +290,20 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     intervals_df['Occupancy'].fillna(0, inplace=True)
     intervals_df.to_csv(eruit, index=False)
     name = build + " " + conf.replace(".csv","")
-    newrow = analyze_mos_file(eruit, name)
+    conftype = conf.split("-")[0]
+    if conftype == "BowOne":
+        maxpos = 1
+    elif conftype == "BowTwo":
+        maxpos = 1
+    elif conftype == "BowFour":
+        maxpos = 4
+    elif conftype == "BowSix":
+        maxpos = 6
+    elif conftype == "BowNine":
+        maxpos = 6
+    elif conftype == "BowTwelve":
+        maxpos = 8
+    newrow = analyze_mos_file(eruit, name, maxpos)
     data_rows.append(newrow)
 
     occupancy_frequency = intervals_df['Occupancy'].value_counts().to_dict()
@@ -416,7 +429,7 @@ def price_to_float(price_str):
     return float(price_str.replace('€', '').replace(',', '.'))
 
 
-def analyze_mos_file(mos_file, name):
+def analyze_mos_file(mos_file, name, maxpos):
     # Load data
     df = pd.read_csv(mos_file)
     df['DateTime'] = pd.to_datetime(df['DateTime'])
@@ -446,7 +459,8 @@ def analyze_mos_file(mos_file, name):
     # Build the row for this file
     row = {
         'Configurations': name,
-        'Occupancy Percentage': occupancy_percentage,
+        'Occupancy Space': occupancy_percentage,
+        'Max possible numerical occupancy': maxpos,
         'Average Occupancy When In Use': average_occupancy,
         'Max Occupancy': max_occupancy
     }
