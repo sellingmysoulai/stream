@@ -289,7 +289,8 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     
     intervals_df['Occupancy'].fillna(0, inplace=True)
     intervals_df.to_csv(eruit, index=False)
-    newrow = analyze_mos_file(eruit)
+    name = build + " " + conf.replace(".csv","")
+    newrow = analyze_mos_file(eruit, name)
     data_rows.append(newrow)
 
     occupancy_frequency = intervals_df['Occupancy'].value_counts().to_dict()
@@ -415,7 +416,7 @@ def price_to_float(price_str):
     return float(price_str.replace('€', '').replace(',', '.'))
 
 
-def analyze_mos_file(mos_file):
+def analyze_mos_file(mos_file, name):
     # Load data
     df = pd.read_csv(mos_file)
     df['DateTime'] = pd.to_datetime(df['DateTime'])
@@ -431,14 +432,6 @@ def analyze_mos_file(mos_file):
     average_occupancy = non_zero_intervals['Occupancy'].mean()
 
     max_occupancy = non_zero_intervals['Occupancy'].max()
-
-    try:
-            path_parts = mos_file.name.split('#')
-    except:
-            path_parts = mos_file.split('#')
-    country, city, building, room_file = path_parts
-
-    name = building+" "+room_file
 
     # Exclusive occupancies for 1-8 Persons calculated from non-zero intervals
     exclusive_occupancies = {}
