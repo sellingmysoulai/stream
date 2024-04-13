@@ -407,13 +407,13 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
             locView.update({uniqLoc: 1})
 
     total_intervals = len(df)
-    non_zero_intervals = df[df['Occupancy'] > 0]
+    non_zero_intervals = df[df['people_counter_all'] > 0]
     num_non_zero_occupancies = len(non_zero_intervals)
     occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
 
     # Average occupancy when in use
-    average_occupancy = non_zero_intervals['Occupancy'].mean()
-    max_occupancy = non_zero_intervals['Occupancy'].max()
+    average_occupancy = non_zero_intervals['people_counter_all'].mean()
+    max_occupancy = non_zero_intervals['people_counter_all'].max()
 
     name = "Sven"
 
@@ -423,7 +423,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
     total_non_zero_intervals = len(non_zero_intervals)
     cumulative_percentage = 0
     for i in range(1, 9):  # From 1 to 8 persons
-        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['Occupancy'] == i].shape[0] / total_non_zero_intervals * 100
+        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['people_counter_all'] == i].shape[0] / total_non_zero_intervals * 100
         cumulative_percentage += exclusive_occupancies[i]
         cumulative_percentages[i] = cumulative_percentage
 
