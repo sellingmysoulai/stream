@@ -409,7 +409,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
             locView.update({uniqLoc: 1})
 
     total_intervals = len(intervals_df)
-    non_zero_intervals = intervals_df[df['people_counter_all'] > 0]
+    non_zero_intervals = intervals_df[intervals_df['people_counter_all'] > 0]
     num_non_zero_occupancies = len(non_zero_intervals)
     occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
 
