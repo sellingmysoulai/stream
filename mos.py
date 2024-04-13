@@ -28,8 +28,7 @@ def main_page():
 
     # Third column with text
     with col3:
-        if st.button('Take a look at your meeting rooms and office within your digital twin.'):
-            navigate_to('https://oder.entweder.vc/')
+         st.markdown('Take a look at your meeting rooms and office within your digital twin. Click [here](https://oder.entweder.vc/).')
 
     # Footer
     #st.markdown('---')
