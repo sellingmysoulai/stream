@@ -860,7 +860,13 @@ def load_data_overview(file_list, month, include_weekends=False):
     #st.write("Total Price Difference:", total_price_difference_str)
     #csv = convert_df_to_csv(final_df)
     st.subheader("Total")
-    st.write(f"Average usage: {persventage_occupied:.2f}%")
+    if persventage_occupied < 0.333:
+        zin = "too low"
+    elif persventage_occupied < 0.667:
+        zin = "healthy"
+    else:
+        zin = "too high"
+    st.write(f"Average usage: {persventage_occupied:.2f}%. This average is deemed as {zin}")
     st.write("Percentage of Occupancies by Weekday:")
     st.write(weekday_percentages_named)
     st.write("Occupancy Distribution:")
