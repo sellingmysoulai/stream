@@ -408,6 +408,53 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
 def price_to_float(price_str):
     return float(price_str.replace('€', '').replace(',', '.'))
 
+
+def analyze_mos_file(mos_file):
+    # Load data
+    df = pd.read_csv(mos_file)
+    df['received_at'] = pd.to_datetime(df['received_at'])
+    df['date'] = df['received_at'].dt.date
+
+    # Compute total and non-zero occupancy intervals
+    total_intervals = len(df)
+    non_zero_intervals = df[df['people_counter_all'] > 0]
+    num_non_zero_occupancies = len(non_zero_intervals)
+    occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
+
+    # Average occupancy when in use
+    average_occupancy = non_zero_intervals['people_counter_all'].mean()
+
+    max_occupancy = non_zero_intervals['people_counter_all'].max()
+
+    try:
+            path_parts = mos_file.name.split('#')
+    except:
+            path_parts = mos_file.split('#')
+    country, city, building, room_file = path_parts
+
+    name = building+" "+room_file
+
+    # Exclusive occupancies for 1-8 Persons calculated from non-zero intervals
+    exclusive_occupancies = {}
+    cumulative_percentages = {}
+    total_non_zero_intervals = len(non_zero_intervals)
+    cumulative_percentage = 0
+    for i in range(1, 9):  # From 1 to 8 persons
+        exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['people_counter_all'] == i].shape[0] / total_non_zero_intervals * 100
+        cumulative_percentage += exclusive_occupancies[i]
+        cumulative_percentages[i] = cumulative_percentage
+
+    # Build the row for this file
+    row = {
+        'Configurations': name,
+        'Occupancy Percentage': occupancy_percentage,
+        'Average Occupancy When In Use': average_occupancy,
+        'Max Occupancy': max_occupancy
+    }
+    row.update({f'Cumulative Occupancy {i} Persons': cumulative_percentages[i] for i in range(1, 9)})
+
+    return row
+
 def load_data_overview(file_list, month, include_weekends=False):
     if file_list == "random":
         #file_list = glob.glob('datas/*')
@@ -778,10 +825,14 @@ def load_data_overview(file_list, month, include_weekends=False):
 
 
     cumdf = pd.DataFrame({
-    "Occupant": occupants,
-    "Percentage": [f"{p:.2f}%" for p in percentages],
-    "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
-})
+        "Occupant": occupants,
+        "Percentage": [f"{p:.2f}%" for p in percentages],
+        "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
+    })
+
+    data_rows = [analyze_mos_file(file) for file in file_list]
+    mos_summary_df = pd.DataFrame(data_rows)
+    st.table(mos_summary_df)
 
 
     # Calculate the weighted sum of occupants
