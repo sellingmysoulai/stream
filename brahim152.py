@@ -769,18 +769,19 @@ def load_data_overview(file_list, month, include_weekends=False):
     final_df = pd.concat([initial_parts_df, blank_df, adjusted_parts_df, blank_df.copy(), df3], axis=1)
 
     total_occupancies = sum(cumulative_occupancy_frequency.values())
-    occupancy_percentages = {occupant: f"{(count / total_occupancies) * 100:.2f}%" for occupant, count in cumulative_occupancy_frequency.items()}
+    occupancy_percentages = {occupant: (count / total_occupancies) * 100 for occupant, count in cumulative_occupancy_frequency.items()}
 
     # Prepare data for cumulative percentages
-    cum_occupants = list(occupancy_percentages.keys())
-    cum_percentages = list(occupancy_percentages.values())
-    cumulative_percentages = [sum(cum_percentages[:i+1]) for i in range(len(cum_percentages))]
+    occupants = list(occupancy_percentages.keys())
+    percentages = list(occupancy_percentages.values())
+    cumulative_percentages = [sum(percentages[:i+1]) for i in range(len(percentages))]
+
 
     cumdf = pd.DataFrame({
-            "Occupant": cum_occupants,
-            "Percentage": [f"{p:.2f}%" for p in cum_percentages],
-            "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
-        })
+    "Occupant": occupants,
+    "Percentage": [f"{p:.2f}%" for p in percentages],
+    "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
+})
 
 
     # Calculate the weighted sum of occupants
