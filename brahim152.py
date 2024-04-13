@@ -771,6 +771,18 @@ def load_data_overview(file_list, month, include_weekends=False):
     total_occupancies = sum(cumulative_occupancy_frequency.values())
     occupancy_percentages = {occupant: f"{(count / total_occupancies) * 100:.2f}%" for occupant, count in cumulative_occupancy_frequency.items()}
 
+    # Prepare data for cumulative percentages
+    cum_occupants = list(occupancy_percentages.keys())
+    cum_percentages = list(occupancy_percentages.values())
+    cumulative_percentages = [sum(cum_percentages[:i+1]) for i in range(len(cum_percentages))]
+
+    cumdf = pd.DataFrame({
+            "Occupant": cum_occupants,
+            "Percentage": [f"{p:.2f}%" for p in cum_percentages],
+            "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
+        })
+
+
     # Calculate the weighted sum of occupants
     weighted_sum_occupants = sum(occupancy_level * count for occupancy_level, count in cumulative_occupancy_frequency.items())
 
@@ -867,6 +879,7 @@ def load_data_overview(file_list, month, include_weekends=False):
     else:
         zin = "too high"
     st.write(f"Your spaces have been occupied {persventage_occupied:.2f}% of the time. This average is deemed as {zin}.")
+    st.table(cumdf)
     st.write("Percentage of Occupancies by Weekday:")
     st.write(weekday_percentages_named)
     st.write("Occupancy Distribution:")
