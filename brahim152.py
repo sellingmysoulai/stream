@@ -860,9 +860,9 @@ def load_data_overview(file_list, month, include_weekends=False):
     #st.write("Total Price Difference:", total_price_difference_str)
     #csv = convert_df_to_csv(final_df)
     st.subheader("Total")
-    if persventage_occupied < 0.333:
+    if persventage_occupied < 33.3:
         zin = "too low"
-    elif persventage_occupied < 0.667:
+    elif persventage_occupied < 66.7:
         zin = "healthy"
     else:
         zin = "too high"
