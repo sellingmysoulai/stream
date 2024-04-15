@@ -841,13 +841,13 @@ def load_data_overview(file_list, month, include_weekends=False):
     occupancy_percentages = {occupant: (count / total_occupancies) * 100 for occupant, count in cumulative_occupancy_frequency.items()}
 
     # Prepare data for cumulative percentages
-    occupants = list(occupancy_percentages.keys())
+    occupants = sorted(int(k) for k in occupancy_percentages.keys())
     percentages = list(occupancy_percentages.values())
     cumulative_percentages = [sum(percentages[:i+1]) for i in range(len(percentages))]
 
 
     cumdf = pd.DataFrame({
-        "Occupant": occupants,
+        "Occupants": occupants,
         "Percentage": [f"{p:.2f}%" for p in percentages],
         "Cumulative Percentage": [f"{cp:.2f}%" for cp in cumulative_percentages]
     })
