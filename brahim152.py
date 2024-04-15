@@ -452,7 +452,7 @@ def analyze_mos_file(mos_file, name, maxpos):
     total_non_zero_intervals = len(non_zero_intervals)
     cumulative_percentage = 0
     for i in range(1, 9):  # From 1 to 8 persons
-        print("sveeeeen ",i, total_non_zero_intervals)
+        print("sveeeeen ",name, i, total_non_zero_intervals)
         exclusive_occupancies[i] = non_zero_intervals[non_zero_intervals['Occupancy'] == i].shape[0] / total_non_zero_intervals * 100
         cumulative_percentage += exclusive_occupancies[i]
         cumulative_percentages[i] = cumulative_percentage
