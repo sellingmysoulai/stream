@@ -955,7 +955,7 @@ def load_data_overview(file_list, month, include_weekends=False):
     st.write(weekday_percentages_named)
     #st.write("Occupancy Distribution:")
     #st.write(occupancy_percentages)
-    st.write("Average occupancy when in use",average_occupants_when_occupied)
+    st.write("Average occupancy when in use", f"{average_occupants_when_occupied:.2f}")
     #data_rows = [analyze_mos_file(file) for file in file_list]
     mos_summary_df = pd.DataFrame(data_rows)
     st.table(mos_summary_df)
