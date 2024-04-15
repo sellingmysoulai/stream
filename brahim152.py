@@ -464,12 +464,13 @@ def analyze_mos_file(mos_file, name, maxpos):
     # Build the row for this file
     row = {
         'Configurations': name,
-        'Occupancy Space': occupancy_percentage,
-        'Max possible numerical occupancy': maxpos,
-        'Average Occupancy When In Use': average_occupancy,
-        'Max Occupancy': max_occupancy
+        'Occupancy Space': f"{occupancy_percentage:.2f}%",
+        'Max possible numerical occupancy': int(maxpos),
+        'Average Occupancy When In Use': f"{average_occupancy:.2f}%",
+        'Max Occupancy': int(max_occupancy)
     }
-    row.update({f'Cumulative Occupancy {i} Persons': cumulative_percentages[i] for i in range(1, 9)})
+    row.update({f'Cumulative Occupancy {i} Persons': f"{cumulative_percentages[i]:.2f}%" for i in range(1, 9)})
+
 
     return row
 
