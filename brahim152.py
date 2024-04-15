@@ -466,7 +466,7 @@ def analyze_mos_file(mos_file, name, maxpos):
         'Configurations': name,
         'Occupancy Space': f"{occupancy_percentage:.2f}%",
         'Max possible numerical occupancy': int(maxpos),
-        'Average Occupancy When In Use': f"{average_occupancy:.2f}%",
+        'Average Occupancy When In Use': f"{average_occupancy:.2f}",
         'Max Occupancy': int(max_occupancy)
     }
     row.update({f'Cumulative Occupancy {i} Persons': f"{cumulative_percentages[i]:.2f}%" for i in range(1, 9)})
