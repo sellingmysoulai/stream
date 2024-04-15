@@ -432,6 +432,7 @@ def price_to_float(price_str):
 def analyze_mos_file(mos_file, name, maxpos):
     # Load data
     df = pd.read_csv(mos_file)
+    print(df)
     df['DateTime'] = pd.to_datetime(df['DateTime'])
     df['date'] = df['DateTime'].dt.date
 
