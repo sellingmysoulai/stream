@@ -471,6 +471,8 @@ def analyze_mos_file(mos_file, name, maxpos):
     return row
 
 def load_data_overview(file_list, month, include_weekends=False):
+    global data_rows
+    data_rows = [] 
     if file_list == "random":
         #file_list = glob.glob('datas/*')
         file_list = generate_dataframes_based_on_template(template_path='mossom.csv')
