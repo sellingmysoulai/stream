@@ -439,6 +439,7 @@ def analyze_mos_file(mos_file, name, maxpos):
     # Compute total and non-zero occupancy intervals
     total_intervals = len(df)
     non_zero_intervals = df[df['Occupancy'] > 0]
+    print(non_zero_intervals)
     num_non_zero_occupancies = len(non_zero_intervals)
     occupancy_percentage = (num_non_zero_occupancies / total_intervals) * 100
 
