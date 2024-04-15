@@ -287,6 +287,8 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
         else:
             interval_occupancy_data[interval] = [occupancy]
     
+    print(intervals_df)
+    print("aha")
     intervals_df['Occupancy'].fillna(0, inplace=True)
     intervals_df.to_csv(eruit, index=False)
     name = build + " " + conf.replace(".csv","")
