@@ -353,7 +353,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
 
     num_rows_non_zero = (intervals_df['Occupancy'] > 0).sum()
     percentage_non_zero = (num_rows_non_zero / len(intervals_df)) * 100
-    st.write(f"Usage {room_type}: {percentage_non_zero:.2f}%")
+    st.write(f"Processing {name}")
     print(f"Percentage of intervals where Occupancy is not 0: {percentage_non_zero:.2f}%")
 
     previous_occupancy = None  # Initialize a variable to hold the occupancy of the previous interval
