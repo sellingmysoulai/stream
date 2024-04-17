@@ -724,7 +724,7 @@ def load_data(file_list, month, include_weekends=False):
 
     # Step 2: Count intervals where all rooms are occupied
     intervals_all_occupied = sum(1 for occupancies in interval_occupancy_data.values() if sum(occupancies) == num_rooms)
-    #st.write(interval_occupancy_data)
+    st.write(interval_occupancy_data)
 
     fully_occupied_intervals = {
         interval: occupancies
