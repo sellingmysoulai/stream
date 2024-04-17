@@ -282,6 +282,7 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
         # Now append the occupancy to the list of occupancies for this interval, building, and room type
         interval_occupancy_data[build][room_type][interval].append(occupancy)
     
+    st.write(interval_occupancy_data)
     intervals_df['Occupancy'].fillna(0, inplace=True)
     intervals_df.to_csv(eruit, index=False)
 
