@@ -749,7 +749,7 @@ def load_data(file_list, month, include_weekends=False):
     for building in interval_occupancy_data:
         for room_type in interval_occupancy_data[building]:
             intervals = interval_occupancy_data[building][room_type]
-            non_zero_intervals = sum(1 for occ in intervals if occ > 0)
+            non_zero_intervals = sum(1 for occ in intervals if int(occ) > 0)
             total_intervals = len(intervals)
             percentage_full = (non_zero_intervals / total_intervals * 100) if total_intervals > 0 else 0
             results_df.at[room_type, building] = percentage_full
