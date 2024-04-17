@@ -729,23 +729,20 @@ def load_data(file_list, month, include_weekends=False):
 
     num_rooms = len(file_list)
 
-    # Step 2: Count intervals where all rooms are occupied
-    intervals_all_occupied = sum(1 for occupancies in interval_occupancy_data.values() if sum(occupancies) == num_rooms)
-    st.write(interval_occupancy_data)
+    
 
-    fully_occupied_intervals = {
-        interval: occupancies
-        for interval, occupancies in interval_occupancy_data.items()
-        if len([occ for occ in occupancies if occ > 0]) == num_rooms
-    }
-
-    # Create a DataFrame from the filtered intervals
-    df_fully_occupied = pd.DataFrame(list(fully_occupied_intervals.keys()), columns=['Interval'])
-
-    # Optionally, add more information, such as non-zero occupancy counts for each interval
-    df_fully_occupied['Respective Occupancies'] = [
-        [occ for occ in occupancies if occ > 0] for occupancies in fully_occupied_intervals.values()
-    ]
+    buildings = list(interval_occupancy_data.keys())
+    room_types = set(rt for bldg in interval_occupancy_data.values() for rt in bldg.keys())
+    results_df = pd.DataFrame(index=room_types, columns=buildings)
+    
+    # Calculate the percentage of fully occupied intervals per room type per building
+    for building in interval_occupancy_data:
+        for room_type in interval_occupancy_data[building]:
+            intervals = interval_occupancy_data[building][room_type]
+            non_zero_intervals = sum(1 for occ in intervals if occ > 0)
+            total_intervals = len(intervals)
+            percentage_full = (non_zero_intervals / total_intervals * 100) if total_intervals > 0 else 0
+            results_df.at[room_type, building] = percentage_full
 
 
     # Display the DataFrame as a table in Streamlit
