@@ -810,7 +810,8 @@ def load_data(file_list, month, include_weekends=False):
     st.subheader("Analysis")
     st.write(f"Number of rooms: {num_rooms}")
     st.write(f"Moments where no spaces are available:")
-    st.table(df_fully_occupied)
+    #st.table(df_fully_occupied)
+    st.table(results_df)
     
     
     
