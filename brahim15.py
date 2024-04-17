@@ -269,11 +269,18 @@ def transformMOS(erin, eruit, additionalHours, subtractHours, room_type, locView
         interval = str(row['DateTime'])  # Convert interval timestamp to string for dictionary key
         occupancy = row['Occupancy']  # Directly use the 'Occupancy' column value for this interval
 
-        # Check if this interval is already in the aggregation structure
-        if interval in interval_occupancy_data:
-            interval_occupancy_data[interval].append(occupancy)
-        else:
-            interval_occupancy_data[interval] = [occupancy]
+        # Assuming `build` and `room_type` are defined from your context
+        if build not in interval_occupancy_data:
+            interval_occupancy_data[build] = {}
+        
+        if room_type not in interval_occupancy_data[build]:
+            interval_occupancy_data[build][room_type] = {}
+        
+        if interval not in interval_occupancy_data[build][room_type]:
+            interval_occupancy_data[build][room_type][interval] = []
+        
+        # Now append the occupancy to the list of occupancies for this interval, building, and room type
+        interval_occupancy_data[build][room_type][interval].append(occupancy)
     
     intervals_df['Occupancy'].fillna(0, inplace=True)
     intervals_df.to_csv(eruit, index=False)
