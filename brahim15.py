@@ -734,7 +734,10 @@ def load_data(file_list, month, include_weekends=False):
 
     buildings = list(interval_occupancy_data.keys())
     room_types = set(rt for bldg in interval_occupancy_data.values() for rt in bldg.keys())
-    results_df = pd.DataFrame(index=room_types, columns=buildings)
+
+    room_types_list = list(room_types)
+    
+    results_df = pd.DataFrame(index=room_types_list, columns=buildings)
     
     # Calculate the percentage of fully occupied intervals per room type per building
     for building in interval_occupancy_data:
