@@ -776,7 +776,7 @@ def load_data(file_list, month, include_weekends=False):
 
     # Display the DataFrame as a table in Streamlit
 
-    opairequest = writer(delta)
+    opairequest = writer(str(delta))
     print("zzzzzzzzzzzzz",opairequest)
     print(delta)
     try:
