@@ -8,6 +8,7 @@ import os, shutil
 import altair as alt
 import random
 import genebait
+from opai import writer
 from genebait import generate_dataframes_based_on_template
 
 additionalHoursLocal = {}
@@ -774,6 +775,9 @@ def load_data(file_list, month, include_weekends=False):
 
 
     # Display the DataFrame as a table in Streamlit
+
+    opairequest = writer("('BowTwo', -2)\n('BowFour', -2)\n('BowSix', +2)")
+    deltatext = opairequest["choices"][0]["message"]["content"]
     
     col1, col2 = st.columns(2)
 
@@ -796,6 +800,7 @@ def load_data(file_list, month, include_weekends=False):
     #st.write(subtractHours)
     st.subheader("Delta Table")
     st.write(delta_df)
+    st.write(deltatext)
     #st.subheader("Rooms to add")
     #st.write(roundDowns)
     #st.subheader("Rooms to remove")
