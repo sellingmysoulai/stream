@@ -808,8 +808,8 @@ def load_data(file_list, month, include_weekends=False):
     #st.write("Total Price Difference:", total_price_difference_str)
     #csv = convert_df_to_csv(final_df)
     st.subheader("Analysis")
-    st.write(f"Number of rooms: {num_rooms}")
-    st.write(f"Moments where no spaces are available:")
+    st.write(f"Number of Spaces: {num_rooms}")
+    st.write(f"Inability warning table:")
     #st.table(df_fully_occupied)
     st.table(results_df)
     
