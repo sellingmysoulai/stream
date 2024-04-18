@@ -1,8 +1,10 @@
 import requests
 import json
+from config import OPENAI_API_KEY
 
 
-def writer(config):
+
+def writer(confi):
     url = "https://api.openai.com/v1/chat/completions"
 
     payload = json.dumps({
@@ -34,13 +36,13 @@ def writer(config):
         },
         {
         "role": "user",
-        "content": config
+        "content": confi
         }
     ]
     })
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer testvalue'
+    'Authorization': 'Bearer '+OPENAI_API_KEY
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
