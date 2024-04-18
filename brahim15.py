@@ -777,6 +777,7 @@ def load_data(file_list, month, include_weekends=False):
     # Display the DataFrame as a table in Streamlit
 
     opairequest = writer(delta)
+    print("zzzzzzzzzzzzz",opairequest)
     print(delta)
     try:
         deltatext = opairequest["choices"][0]["message"]["content"]
