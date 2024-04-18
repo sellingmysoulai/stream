@@ -395,7 +395,6 @@ def load_data(file_list, month, include_weekends=False):
         'BowNine': 0,
         'BowTwelve': 0
     }
-    additionalHoursLocal = {}
     subtractHours = {
         'BowOne': 0,
         'BowTwo': 0,
