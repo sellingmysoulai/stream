@@ -1,11 +1,12 @@
 import requests
 import json
-from config import OPENAI_API_KEY
+from config import SETUP_KEY, CHAT_KEY
 
 
 
 def writer(confi):
     url = "https://api.openai.com/v1/chat/completions"
+    key = SETUP_KEY+CHAT_KEY
 
     payload = json.dumps({
     "model": "gpt-4-turbo",
@@ -42,7 +43,7 @@ def writer(confi):
     })
     headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer '+OPENAI_API_KEY
+    'Authorization': 'Bearer '+key
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
