@@ -781,7 +781,7 @@ def load_data(file_list, month, include_weekends=False):
     try:
         deltatext = opairequest["choices"][0]["message"]["content"]
     except:
-        deltatext = "API HERRES"
+        deltatext = ""
     
     col1, col2 = st.columns(2)
 
