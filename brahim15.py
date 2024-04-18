@@ -385,6 +385,7 @@ def load_data(file_list, month, include_weekends=False):
     else:
         bear = "files"
     room_type_frequency = {}
+    interval_occupancy_data = {}
     locations = {}
     additionalHours = {
         'BowOne': 0,
