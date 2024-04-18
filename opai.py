@@ -29,11 +29,11 @@ def writer(confi):
         },
         {
         "role": "user",
-        "content": "Not bad, but I said be definite. So no 'seems', 'could' etc. Try again."
+        "content": "Not bad, but I said be definite. So no 'seems', 'could' etc. Also, never use the word pods, only spaces. Try again."
         },
         {
         "role": "assistant",
-        "content": "The suggested changes to the meeting room pods configuration, specifically decreasing the number of 'BOW Two' pods by two and 'BOW Four' pods by one while increasing the 'BOW Six' pods by one, are a strategic response to the clear demand for larger meeting spaces. By reallocating resources from smaller pods designed for individuals or small groups to a larger 'BOW Six' pod, the adjustment directly addresses the need for spaces that accommodate medium-sized teams. This decision ensures that the workspace is more effectively utilized, enhancing collaboration and efficiency by providing adequately sized meeting environments that match the current utilization trends and requirements of the users."
+        "content": "The suggested changes to the spaces configuration, specifically decreasing the number of 'BOW Two' spaces by two and 'BOW Four' spaces by one while increasing the 'BOW Six' spaces by one, are a strategic response to the clear demand for larger meeting spaces. By reallocating resources from smaller spaces designed for individuals or small groups to a larger 'BOW Six' space, the adjustment directly addresses the need for spaces that accommodate medium-sized teams. This decision ensures that the workspace is more effectively utilized, enhancing collaboration and efficiency by providing adequately sized meeting environments that match the current utilization trends and requirements of the users."
         },
         {
         "role": "user",
